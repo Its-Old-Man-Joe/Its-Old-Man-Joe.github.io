@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Palm Reading Slots</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0033, #330066, #4a0080);
+            font-family: 'Georgia', serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .machine-container {
+            background: linear-gradient(145deg, #2a1810, #1a0f08);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,215,0,0.1);
+            border: 3px solid #ffd700;
+            position: relative;
+            max-width: 500px;
+        }
+
+        .title {
+            text-align: center;
+            color: #ffd700;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+            font-weight: bold;
+        }
+
+        .slots-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            background: #000;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #333;
+        }
+
+        .reel {
+            width: 100px;
+            height: 120px;
+            background: #111;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reel.spinning {
+            animation: spin 0.1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .credits {
+            color: #ffd700;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .spin-btn {
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+            transition: all 0.2s;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.5);
+        }
+
+        .spin-btn:active {
+            transform: translateY(0);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reading {
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 100px;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .reading h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .payouts {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .payouts h4 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .payout-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 2px 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .win-flash {
+            animation: winFlash 0.5s ease-in-out 3;
+        }
+
+        @keyframes winFlash {
+            0%, 100% { background: #111; }
+            50% { background: #ffd700; color: #000; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="machine-container">
+        <h1 class="title">🔮 Mystical Palm Reading Slots 🔮</h1>
+        
+        <div class="slots-container">
+            <div class="reel" id="reel1">🤚</div>
+            <div class="reel" id="reel2">🤚</div>
+            <div class="reel" id="reel3">🤚</div>
+        </div>
+        
+        <div class="controls">
+            <div class="credits">Credits: <span id="credits">100</span></div>
+            <button class="spin-btn" id="spinBtn">SPIN (10 credits)</button>
+        </div>
+        
+        <div class="reading" id="reading">
+            <h3>Your Palm Awaits...</h3>
+            <p>Spin the mystical reels to reveal what the lines of fate have written for you!</p>
+        </div>
+        
+        <div class="payouts">
+            <h4>Mystical Payouts</h4>
+            <div class="payout-line"><span>🔮🔮🔮</span><span>100 credits</span></div>
+            <div class="payout-line"><span>👁️👁️👁️</span><span>75 credits</span></div>
+            <div class="payout-line"><span>🌟🌟🌟</span><span>50 credits</span></div>
+            <div class="payout-line"><span>🤚🤚🤚</span><span>30 credits</span></div>
+            <div class="payout-line"><span>🔮🔮</span><span>20 credits</span></div>
+            <div class="payout-line"><span>👁️👁️</span><span>15 credits</span></div>
+            <div class="payout-line"><span>🌟🌟</span><span>10 credits</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Palm reading symbols and their meanings
+        const symbols = ['🤚', '🔮', '👁️', '🌟', '✨', '🌙'];
+        const readings = {
+            '🔮🔮🔮': {
+                title: "The Crystal Vision",
+                text: "Your third eye is wide open! Great clarity and wisdom guide your path. Major insights await you."
+            },
+            '👁️👁️👁️': {
+                title: "The All-Seeing Eye",
+                text: "You possess deep intuition and psychic abilities. Trust your inner voice in important decisions."
+            },
+            '🌟🌟🌟': {
+                title: "Stars Aligned",
+                text: "The cosmos smile upon you! Your destiny is written in starlight. Fortune favors your endeavors."
+            },
+            '🤚🤚🤚': {
+                title: "The Master's Hand",
+                text: "Your life line shows great strength and longevity. You have the power to shape your own destiny."
+            },
+            '🔮🔮': {
+                title: "Mystic Pair",
+                text: "Visions come to you in dreams. Pay attention to symbols and synchronicities around you."
+            },
+            '👁️👁️': {
+                title: "Twin Sight",
+                text: "You see beyond the veil. Your perception reveals hidden truths others cannot grasp."
+            },
+            '🌟🌟': {
+                title: "Lucky Stars",
+                text: "Good fortune is on its way. Your heart line indicates new love or renewed passion."
+            },
+            '🤚🤚': {
+                title: "Helping Hands",
+                text: "Your fate line shows assistance from others. Collaboration will bring unexpected rewards."
+            },
+            'mixed': [
+                { title: "The Seeker's Path", text: "Your palm shows a journey of discovery ahead. Stay curious and open to new experiences." },
+                { title: "Crossroads Ahead", text: "Multiple paths diverge before you. Trust your intuition to choose the right direction." },
+                { title: "Hidden Talents", text: "Your palm reveals untapped potential. It's time to explore new skills and abilities." },
+                { title: "Love and Light", text: "Your heart line glows with positive energy. Relationships will flourish in the coming days." },
+                { title: "The Wanderer", text: "Adventure calls to your restless spirit. New horizons await your exploration." }
+            ]
+        };
+
+        let credits = 100;
+        let isSpinning = false;
+
+        // Generate stars
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function updateCredits() {
+            document.getElementById('credits').textContent = credits;
+        }
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function calculatePayout(result) {
+            const [s1, s2, s3] = result;
+            
+            if (s1 === s2 && s2 === s3) {
+                switch(s1) {
+                    case '🔮': return 100;
+                    case '👁️': return 75;
+                    case '🌟': return 50;
+                    case '🤚': return 30;
+                    default: return 25;
+                }
+            } else if (s1 === s2 || s2 === s3 || s1 === s3) {
+                if (s1 === '🔮' || s2 === '🔮' || s3 === '🔮') return 20;
+                if (s1 === '👁️' || s2 === '👁️' || s3 === '👁️') return 15;
+                if (s1 === '🌟' || s2 === '🌟' || s3 === '🌟') return 10;
+                return 5;
+            }
+            
+            return 0;
+        }
+
+        function getReading(result) {
+            const key = result.join('');
+            
+            if (readings[key]) {
+                return readings[key];
+            }
+            
+            // Check for pairs
+            const [s1, s2, s3] = result;
+            if (s1 === s2) {
+                const pairKey = s1 + s2;
+                if (readings[pairKey]) return readings[pairKey];
+            }
+            if (s2 === s3) {
+                const pairKey = s2 + s3;
+                if (readings[pairKey]) return readings[pairKey];
+            }
+            if (s1 === s3) {
+                const pairKey = s1 + s3;
+                if (readings[pairKey]) return readings[pairKey];
+            }
+            
+            // Random mixed reading
+            const mixedReadings = readings.mixed;
+            return mixedReadings[Math.floor(Math.random() * mixedReadings.length)];
+        }
+
+        function animateReel(reel, finalSymbol, duration) {
+            return new Promise(resolve => {
+                reel.classList.add('spinning');
+                let elapsed = 0;
+                const interval = setInterval(() => {
+                    reel.textContent = getRandomSymbol();
+                    elapsed += 100;
+                    
+                    if (elapsed >= duration) {
+                        clearInterval(interval);
+                        reel.classList.remove('spinning');
+                        reel.textContent = finalSymbol;
+                        resolve();
+                    }
+                }, 100);
+            });
+        }
+
+        async function spin() {
+            if (isSpinning || credits < 10) return;
+            
+            isSpinning = true;
+            credits -= 10;
+            updateCredits();
+            
+            document.getElementById('spinBtn').disabled = true;
+            
+            // Generate final result
+            const result = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
+            
+            // Animate reels with staggered timing
+            const reel1 = document.getElementById('reel1');
+            const reel2 = document.getElementById('reel2');
+            const reel3 = document.getElementById('reel3');
+            
+            await Promise.all([
+                animateReel(reel1, result[0], 1000),
+                animateReel(reel2, result[1], 1500),
+                animateReel(reel3, result[2], 2000)
+            ]);
+            
+            // Calculate payout and show reading
+            const payout = calculatePayout(result);
+            const reading = getReading(result);
+            
+            if (payout > 0) {
+                credits += payout;
+                updateCredits();
+                
+                // Flash win animation
+                [reel1, reel2, reel3].forEach(reel => {
+                    reel.classList.add('win-flash');
+                    setTimeout(() => reel.classList.remove('win-flash'), 1500);
+                });
+            }
+            
+            // Show reading
+            const readingDiv = document.getElementById('reading');
+            readingDiv.innerHTML = `
+                <h3>${reading.title}</h3>
+                <p>${reading.text}</p>
+                ${payout > 0 ? `<p style="color: #ffd700; font-weight: bold; margin-top: 10px;">You won ${payout} credits!</p>` : ''}
+            `;
+            
+            isSpinning = false;
+            document.getElementById('spinBtn').disabled = credits < 10;
+            
+            // Check for game over
+            if (credits < 10) {
+                setTimeout(() => {
+                    readingDiv.innerHTML = `
+                        <h3>The Reading Ends</h3>
+                        <p>Your mystical journey concludes here. The cards have been read, the palms have spoken.</p>
+                        <button onclick="resetGame()" style="background: #ffd700; color: #000; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 10px; cursor: pointer;">Start New Reading</button>
+                    `;
+                }, 2000);
+            }
+        }
+
+        function resetGame() {
+            credits = 100;
+            updateCredits();
+            document.getElementById('spinBtn').disabled = false;
+            document.getElementById('reading').innerHTML = `
+                <h3>Your Palm Awaits...</h3>
+                <p>Spin the mystical reels to reveal what the lines of fate have written for you!</p>
+            `;
+            
+            // Reset reels
+            document.getElementById('reel1').textContent = '🤚';
+            document.getElementById('reel2').textContent = '🤚';
+            document.getElementById('reel3').textContent = '🤚';
+        }
+
+        // Initialize
+        generateStars();
+        updateCredits();
+        document.getElementById('spinBtn').addEventListener('click', spin);
+        
+        // Auto-spin on spacebar
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                spin();
+            }
+        });
+    </script>
+</body>
+</html>
