@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystical Palm Reading Slots</title>
+    <title>Mystical Palm Reading Slots - 20 Column Edition</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: auto;
+            padding: 20px;
         }
 
         .stars {
@@ -29,6 +30,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 0;
         }
 
         .star {
@@ -48,46 +50,65 @@
         .machine-container {
             background: linear-gradient(145deg, #2a1810, #1a0f08);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,215,0,0.1);
             border: 3px solid #ffd700;
             position: relative;
-            max-width: 500px;
+            max-width: 1200px;
+            width: 100%;
+            z-index: 1;
         }
 
         .title {
             text-align: center;
             color: #ffd700;
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 24px;
+            margin-bottom: 15px;
             text-shadow: 0 0 10px rgba(255,215,0,0.5);
             font-weight: bold;
         }
 
+        .subtitle {
+            text-align: center;
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
         .slots-container {
             display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 30px 0;
+            flex-direction: column;
+            gap: 5px;
+            margin: 20px 0;
             background: #000;
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             border: 2px solid #333;
+            overflow-x: auto;
+        }
+
+        .slot-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            min-width: 1050px;
         }
 
         .reel {
-            width: 100px;
-            height: 120px;
+            width: 50px;
+            height: 60px;
             background: #111;
-            border: 2px solid #ffd700;
-            border-radius: 10px;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
-            transition: all 0.3s ease;
+            font-size: 24px;
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .reel.spinning {
@@ -96,18 +117,52 @@
 
         @keyframes spin {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-100px); }
+            100% { transform: translateY(-60px); }
         }
+
+        .payline {
+            position: absolute;
+            height: 2px;
+            background: rgba(255, 215, 0, 0.8);
+            width: calc(100% - 30px);
+            left: 15px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+
+        .payline.active {
+            opacity: 1;
+            box-shadow: 0 0 10px #ffd700;
+            animation: paylinePulse 1s ease-in-out 3;
+        }
+
+        @keyframes paylinePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .payline-1 { top: 30px; }
+        .payline-2 { top: 95px; }
+        .payline-3 { top: 160px; }
 
         .controls {
             text-align: center;
             margin: 20px 0;
         }
 
-        .credits {
-            color: #ffd700;
-            font-size: 18px;
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            color: #ffd700;
+            font-size: 16px;
             font-weight: bold;
         }
 
@@ -116,12 +171,13 @@
             color: #000;
             border: none;
             padding: 15px 40px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255,215,0,0.3);
             transition: all 0.2s;
+            margin: 0 10px;
         }
 
         .spin-btn:hover {
@@ -145,7 +201,7 @@
             border-radius: 15px;
             padding: 20px;
             margin: 20px 0;
-            min-height: 100px;
+            min-height: 80px;
             text-align: center;
             font-style: italic;
             line-height: 1.5;
@@ -154,7 +210,7 @@
         .reading h3 {
             color: #ffd700;
             margin-bottom: 10px;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .payouts {
@@ -162,31 +218,96 @@
             border-radius: 10px;
             padding: 15px;
             margin-top: 20px;
-            font-size: 14px;
+            font-size: 11px;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .payouts h4 {
             color: #ffd700;
             text-align: center;
             margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .payout-section {
+            margin-bottom: 10px;
+        }
+
+        .payout-section h5 {
+            color: #ffed4e;
+            font-size: 11px;
+            margin-bottom: 5px;
+            text-decoration: underline;
         }
 
         .payout-line {
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
-            padding: 2px 5px;
-            border-radius: 5px;
+            margin: 2px 0;
+            padding: 1px 5px;
+            border-radius: 3px;
             background: rgba(255,255,255,0.05);
+            font-size: 10px;
         }
 
         .win-flash {
-            animation: winFlash 0.5s ease-in-out 3;
+            animation: winFlash 0.4s ease-in-out 4;
         }
 
         @keyframes winFlash {
-            0%, 100% { background: #111; }
-            50% { background: #ffd700; color: #000; }
+            0%, 100% { 
+                background: #111; 
+                border-color: #ffd700;
+            }
+            50% { 
+                background: #ffd700; 
+                color: #000;
+                border-color: #fff;
+            }
+        }
+
+        .symbol-legend {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            margin: 8px 0;
+            font-size: 9px;
+        }
+
+        .symbol-item {
+            text-align: center;
+            padding: 2px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+
+        .win-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            animation: highlightWin 2s ease-in-out;
+        }
+
+        @keyframes highlightWin {
+            0%, 100% { opacity: 0; }
+            30%, 70% { opacity: 1; }
+        }
+
+        @media (max-width: 1250px) {
+            .machine-container {
+                max-width: 100%;
+            }
+            
+            .slot-row {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -194,88 +315,156 @@
     <div class="stars" id="stars"></div>
     
     <div class="machine-container">
-        <h1 class="title">🔮 Mystical Palm Reading Slots 🔮</h1>
+        <h1 class="title">🔮 MEGA MYSTICAL PALM READING SLOTS 🔮</h1>
+        <div class="subtitle">20 Columns of Cosmic Fortune</div>
         
         <div class="slots-container">
-            <div class="reel" id="reel1">🤚</div>
-            <div class="reel" id="reel2">🤚</div>
-            <div class="reel" id="reel3">🤚</div>
+            <div class="payline payline-1" id="payline1"></div>
+            <div class="slot-row" id="row1"></div>
+            
+            <div class="payline payline-2" id="payline2"></div>
+            <div class="slot-row" id="row2"></div>
+            
+            <div class="payline payline-3" id="payline3"></div>
+            <div class="slot-row" id="row3"></div>
         </div>
         
         <div class="controls">
-            <div class="credits">Credits: <span id="credits">100</span></div>
-            <button class="spin-btn" id="spinBtn">SPIN (10 credits)</button>
+            <div class="stats">
+                <div class="stat">Credits: <span id="credits">500</span></div>
+                <div class="stat">Last Win: <span id="lastWin">0</span></div>
+                <div class="stat">Total Won: <span id="totalWon">0</span></div>
+            </div>
+            <button class="spin-btn" id="spinBtn">SPIN THE COSMOS (50 credits)</button>
+            <button class="spin-btn" id="resetBtn" onclick="resetGame()">NEW JOURNEY</button>
         </div>
         
         <div class="reading" id="reading">
-            <h3>Your Palm Awaits...</h3>
-            <p>Spin the mystical reels to reveal what the lines of fate have written for you!</p>
+            <h3>The Cosmic Grid Awaits...</h3>
+            <p>Spin the 20 mystical columns to unlock the secrets written across the vast tapestry of fate!</p>
         </div>
         
         <div class="payouts">
-            <h4>Mystical Payouts</h4>
-            <div class="payout-line"><span>🔮🔮🔮</span><span>100 credits</span></div>
-            <div class="payout-line"><span>👁️👁️👁️</span><span>75 credits</span></div>
-            <div class="payout-line"><span>🌟🌟🌟</span><span>50 credits</span></div>
-            <div class="payout-line"><span>🤚🤚🤚</span><span>30 credits</span></div>
-            <div class="payout-line"><span>🔮🔮</span><span>20 credits</span></div>
-            <div class="payout-line"><span>👁️👁️</span><span>15 credits</span></div>
-            <div class="payout-line"><span>🌟🌟</span><span>10 credits</span></div>
+            <h4>Mystical Payouts (Consecutive Symbols on Any Line)</h4>
+            
+            <div class="symbol-legend">
+                <div class="symbol-item">🔮<br>Crystal</div>
+                <div class="symbol-item">👁️<br>Eye</div>
+                <div class="symbol-item">🌟<br>Star</div>
+                <div class="symbol-item">🌙<br>Moon</div>
+                <div class="symbol-item">⚡<br>Energy</div>
+                <div class="symbol-item">🗝️<br>Key</div>
+                <div class="symbol-item">🔯<br>Seal</div>
+                <div class="symbol-item">🪬<br>Hamsa</div>
+                <div class="symbol-item">🕯️<br>Candle</div>
+                <div class="symbol-item">📿<br>Beads</div>
+                <div class="symbol-item">🧿<br>Evil Eye</div>
+                <div class="symbol-item">🤚<br>Palm</div>
+            </div>
+            
+            <div class="payout-section">
+                <h5>20 Consecutive (Full Line)</h5>
+                <div class="payout-line"><span>🔮 × 20</span><span>10000 credits</span></div>
+                <div class="payout-line"><span>👁️ × 20</span><span>7500 credits</span></div>
+                <div class="payout-line"><span>Any × 20</span><span>5000+ credits</span></div>
+            </div>
+            
+            <div class="payout-section">
+                <h5>10+ Consecutive</h5>
+                <div class="payout-line"><span>🔮 × 10</span><span>2000 credits</span></div>
+                <div class="payout-line"><span>👁️ × 10</span><span>1500 credits</span></div>
+                <div class="payout-line"><span>🌟 × 10</span><span>1200 credits</span></div>
+                <div class="payout-line"><span>Other × 10</span><span>800+ credits</span></div>
+            </div>
+            
+            <div class="payout-section">
+                <h5>5+ Consecutive</h5>
+                <div class="payout-line"><span>🔮 × 5</span><span>500 credits</span></div>
+                <div class="payout-line"><span>👁️ × 5</span><span>400 credits</span></div>
+                <div class="payout-line"><span>🌟 × 5</span><span>350 credits</span></div>
+                <div class="payout-line"><span>Other × 5</span><span>200+ credits</span></div>
+            </div>
+            
+            <div class="payout-section">
+                <h5>3-4 Consecutive</h5>
+                <div class="payout-line"><span>Any × 4</span><span>100+ credits</span></div>
+                <div class="payout-line"><span>Any × 3</span><span>25+ credits</span></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Palm reading symbols and their meanings
-        const symbols = ['🤚', '🔮', '👁️', '🌟', '✨', '🌙'];
-        const readings = {
-            '🔮🔮🔮': {
-                title: "The Crystal Vision",
-                text: "Your third eye is wide open! Great clarity and wisdom guide your path. Major insights await you."
-            },
-            '👁️👁️👁️': {
-                title: "The All-Seeing Eye",
-                text: "You possess deep intuition and psychic abilities. Trust your inner voice in important decisions."
-            },
-            '🌟🌟🌟': {
-                title: "Stars Aligned",
-                text: "The cosmos smile upon you! Your destiny is written in starlight. Fortune favors your endeavors."
-            },
-            '🤚🤚🤚': {
-                title: "The Master's Hand",
-                text: "Your life line shows great strength and longevity. You have the power to shape your own destiny."
-            },
-            '🔮🔮': {
-                title: "Mystic Pair",
-                text: "Visions come to you in dreams. Pay attention to symbols and synchronicities around you."
-            },
-            '👁️👁️': {
-                title: "Twin Sight",
-                text: "You see beyond the veil. Your perception reveals hidden truths others cannot grasp."
-            },
-            '🌟🌟': {
-                title: "Lucky Stars",
-                text: "Good fortune is on its way. Your heart line indicates new love or renewed passion."
-            },
-            '🤚🤚': {
-                title: "Helping Hands",
-                text: "Your fate line shows assistance from others. Collaboration will bring unexpected rewards."
-            },
-            'mixed': [
-                { title: "The Seeker's Path", text: "Your palm shows a journey of discovery ahead. Stay curious and open to new experiences." },
-                { title: "Crossroads Ahead", text: "Multiple paths diverge before you. Trust your intuition to choose the right direction." },
-                { title: "Hidden Talents", text: "Your palm reveals untapped potential. It's time to explore new skills and abilities." },
-                { title: "Love and Light", text: "Your heart line glows with positive energy. Relationships will flourish in the coming days." },
-                { title: "The Wanderer", text: "Adventure calls to your restless spirit. New horizons await your exploration." }
-            ]
+        // Expanded mystical symbols with weighted probabilities
+        const symbols = ['🤚', '🔮', '👁️', '🌟', '🌙', '⚡', '🗝️', '🔯', '🪬', '🕯️', '📿', '🧿'];
+        const symbolWeights = {
+            '🤚': 15, '📿': 12, '🧿': 12, '🕯️': 10, '🪬': 10, '🔯': 8, 
+            '🗝️': 8, '⚡': 7, '🌙': 6, '🌟': 5, '👁️': 4, '🔮': 3
         };
 
-        let credits = 100;
+        // Enhanced readings for different win patterns
+        const readings = {
+            // Mega wins (10+ consecutive)
+            mega: [
+                { title: "Cosmic Enlightenment", text: "The entire universe aligns in your favor! You have transcended mortal understanding and touched the divine realm of infinite possibility." },
+                { title: "Master of All Realms", text: "Your consciousness expands across multiple dimensions! The ancient masters bow to your supreme mystical awakening." },
+                { title: "The Chosen Oracle", text: "You are the prophesied one! All cosmic energies converge through your being, granting unlimited spiritual power." },
+                { title: "Universal Harmonics", text: "The sacred geometry of existence flows through you! Reality itself bends to accommodate your divine will." }
+            ],
+            
+            // Big wins (5-9 consecutive)  
+            big: [
+                { title: "Celestial Cascade", text: "The stars pour their blessings upon you! Your spiritual energy reaches unprecedented heights of power and clarity." },
+                { title: "Divine Intervention", text: "The higher powers have taken notice! Your path is illuminated by ethereal light and protected by ancient guardians." },
+                { title: "Mystic Mastery", text: "You have achieved a new level of mystical understanding! The veil between worlds grows thin around your presence." },
+                { title: "Sacred Awakening", text: "Your third eye blazes with cosmic fire! Hidden truths of the universe reveal themselves in brilliant clarity." }
+            ],
+            
+            // Medium wins (3-4 consecutive)
+            medium: [
+                { title: "Spiritual Alignment", text: "Your chakras resonate in perfect harmony! Positive energy flows freely through your being." },
+                { title: "Ancestral Blessing", text: "The wisdom of your forebears guides your steps! Ancient knowledge whispers secrets of success." },
+                { title: "Mystic Current", text: "You tap into the mystical currents flowing through reality! Synchronicity becomes your constant companion." },
+                { title: "Inner Light", text: "Your inner flame burns brighter! Intuition and wisdom illuminate the path ahead." }
+            ],
+            
+            // Small/no wins
+            small: [
+                { title: "Seeds of Destiny", text: "The universe plants seeds of future fortune! Be patient as cosmic forces work in your favor." },
+                { title: "Spiritual Preparation", text: "Your soul prepares for greater things! This moment of reflection strengthens your mystical foundations." },
+                { title: "Hidden Currents", text: "Invisible forces stir around you! Trust that the universe is arranging circumstances for your benefit." },
+                { title: "The Patient Oracle", text: "Wisdom comes to those who wait! Your time of great revelation approaches with cosmic certainty." }
+            ],
+
+            // Special symbol combinations
+            crystal: { title: "Crystal Vision Quest", text: "The crystal realm opens before you! Pure clarity and prophetic visions guide your spiritual journey." },
+            eye: { title: "All-Seeing Perception", text: "Your sight pierces all illusions! Truth and hidden knowledge are revealed to your awakened consciousness." },
+            star: { title: "Stellar Navigation", text: "The stars chart your course to greatness! Celestial forces align to ensure your cosmic success." },
+            moon: { title: "Lunar Mysteries", text: "The moon shares her ancient secrets! Your intuitive powers wax strong under her mystical influence." }
+        };
+
+        let credits = 500;
+        let totalWon = 0;
+        let lastWin = 0;
         let isSpinning = false;
+
+        // Initialize the slot grid
+        function initializeSlots() {
+            for (let row = 1; row <= 3; row++) {
+                const rowContainer = document.getElementById(`row${row}`);
+                for (let col = 1; col <= 20; col++) {
+                    const reel = document.createElement('div');
+                    reel.className = 'reel';
+                    reel.id = `reel-${row}-${col}`;
+                    reel.textContent = '🤚';
+                    rowContainer.appendChild(reel);
+                }
+            }
+        }
 
         // Generate stars
         function generateStars() {
             const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.left = Math.random() * 100 + '%';
@@ -285,168 +474,337 @@
             }
         }
 
-        function updateCredits() {
+        function updateStats() {
             document.getElementById('credits').textContent = credits;
+            document.getElementById('lastWin').textContent = lastWin;
+            document.getElementById('totalWon').textContent = totalWon;
         }
 
-        function getRandomSymbol() {
-            return symbols[Math.floor(Math.random() * symbols.length)];
+        function getWeightedRandomSymbol() {
+            const totalWeight = Object.values(symbolWeights).reduce((sum, weight) => sum + weight, 0);
+            let random = Math.random() * totalWeight;
+            
+            for (const [symbol, weight] of Object.entries(symbolWeights)) {
+                random -= weight;
+                if (random <= 0) return symbol;
+            }
+            return symbols[0];
         }
 
-        function calculatePayout(result) {
-            const [s1, s2, s3] = result;
+        function findConsecutiveMatches(line) {
+            const matches = [];
+            let currentMatch = { symbol: line[0], start: 0, length: 1 };
             
-            if (s1 === s2 && s2 === s3) {
-                switch(s1) {
-                    case '🔮': return 100;
-                    case '👁️': return 75;
-                    case '🌟': return 50;
-                    case '🤚': return 30;
-                    default: return 25;
-                }
-            } else if (s1 === s2 || s2 === s3 || s1 === s3) {
-                if (s1 === '🔮' || s2 === '🔮' || s3 === '🔮') return 20;
-                if (s1 === '👁️' || s2 === '👁️' || s3 === '👁️') return 15;
-                if (s1 === '🌟' || s2 === '🌟' || s3 === '🌟') return 10;
-                return 5;
-            }
-            
-            return 0;
-        }
-
-        function getReading(result) {
-            const key = result.join('');
-            
-            if (readings[key]) {
-                return readings[key];
-            }
-            
-            // Check for pairs
-            const [s1, s2, s3] = result;
-            if (s1 === s2) {
-                const pairKey = s1 + s2;
-                if (readings[pairKey]) return readings[pairKey];
-            }
-            if (s2 === s3) {
-                const pairKey = s2 + s3;
-                if (readings[pairKey]) return readings[pairKey];
-            }
-            if (s1 === s3) {
-                const pairKey = s1 + s3;
-                if (readings[pairKey]) return readings[pairKey];
-            }
-            
-            // Random mixed reading
-            const mixedReadings = readings.mixed;
-            return mixedReadings[Math.floor(Math.random() * mixedReadings.length)];
-        }
-
-        function animateReel(reel, finalSymbol, duration) {
-            return new Promise(resolve => {
-                reel.classList.add('spinning');
-                let elapsed = 0;
-                const interval = setInterval(() => {
-                    reel.textContent = getRandomSymbol();
-                    elapsed += 100;
-                    
-                    if (elapsed >= duration) {
-                        clearInterval(interval);
-                        reel.classList.remove('spinning');
-                        reel.textContent = finalSymbol;
-                        resolve();
+            for (let i = 1; i < line.length; i++) {
+                if (line[i] === currentMatch.symbol) {
+                    currentMatch.length++;
+                } else {
+                    if (currentMatch.length >= 3) {
+                        matches.push({...currentMatch});
                     }
-                }, 100);
+                    currentMatch = { symbol: line[i], start: i, length: 1 };
+                }
+            }
+            
+            if (currentMatch.length >= 3) {
+                matches.push(currentMatch);
+            }
+            
+            return matches;
+        }
+
+        function calculatePayout(matches) {
+            let totalPayout = 0;
+            
+            matches.forEach(match => {
+                const { symbol, length } = match;
+                let basePayout = 0;
+                
+                // Base payouts by symbol rarity
+                const symbolValues = {
+                    '🔮': 100, '👁️': 80, '🌟': 70, '🌙': 60, '⚡': 55,
+                    '🗝️': 50, '🔯': 45, '🪬': 40, '🕯️': 35, '📿': 30, '🧿': 25, '🤚': 20
+                };
+                
+                basePayout = symbolValues[symbol] || 20;
+                
+                // Exponential scaling for length
+                if (length >= 20) {
+                    totalPayout += basePayout * 100; // Full line bonus
+                } else if (length >= 15) {
+                    totalPayout += basePayout * 50;
+                } else if (length >= 10) {
+                    totalPayout += basePayout * 20;
+                } else if (length >= 7) {
+                    totalPayout += basePayout * 10;
+                } else if (length >= 5) {
+                    totalPayout += basePayout * 5;
+                } else if (length === 4) {
+                    totalPayout += basePayout * 2;
+                } else if (length === 3) {
+                    totalPayout += basePayout;
+                }
+            });
+            
+            return totalPayout;
+        }
+
+        function getReading(allMatches, totalPayout) {
+            let readingCategory = 'small';
+            let specialSymbol = null;
+            
+            if (totalPayout >= 2000) {
+                readingCategory = 'mega';
+            } else if (totalPayout >= 500) {
+                readingCategory = 'big';
+            } else if (totalPayout >= 50) {
+                readingCategory = 'medium';
+            }
+            
+            // Check for special symbols in winning combinations
+            allMatches.forEach(match => {
+                if (match.symbol === '🔮' && match.length >= 5) specialSymbol = 'crystal';
+                else if (match.symbol === '👁️' && match.length >= 5) specialSymbol = 'eye';
+                else if (match.symbol === '🌟' && match.length >= 5) specialSymbol = 'star';
+                else if (match.symbol === '🌙' && match.length >= 5) specialSymbol = 'moon';
+            });
+            
+            if (specialSymbol && readings[specialSymbol]) {
+                return readings[specialSymbol];
+            }
+            
+            const categoryReadings = readings[readingCategory];
+            return categoryReadings[Math.floor(Math.random() * categoryReadings.length)];
+        }
+
+        function highlightWinningReels(matches, rowIndex) {
+            matches.forEach(match => {
+                for (let i = 0; i < match.length; i++) {
+                    const reel = document.getElementById(`reel-${rowIndex + 1}-${match.start + i + 1}`);
+                    if (reel) {
+                        reel.classList.add('win-flash');
+                        
+                        // Add highlight overlay
+                        const highlight = document.createElement('div');
+                        highlight.className = 'win-highlight';
+                        reel.appendChild(highlight);
+                        
+                        setTimeout(() => {
+                            reel.classList.remove('win-flash');
+                            if (highlight.parentNode) {
+                                highlight.parentNode.removeChild(highlight);
+                            }
+                        }, 2000);
+                    }
+                }
             });
         }
 
+        async function animateReels() {
+            // Generate final results
+            const results = [];
+            for (let row = 0; row < 3; row++) {
+                results[row] = [];
+                for (let col = 0; col < 20; col++) {
+                    results[row][col] = getWeightedRandomSymbol();
+                }
+            }
+            
+            // Animate in waves for better performance
+            const animationPromises = [];
+            
+            for (let wave = 0; wave < 4; wave++) {
+                const wavePromises = [];
+                
+                for (let row = 1; row <= 3; row++) {
+                    for (let col = wave * 5 + 1; col <= Math.min((wave + 1) * 5, 20); col++) {
+                        const reel = document.getElementById(`reel-${row}-${col}`);
+                        if (reel) {
+                            const finalSymbol = results[row - 1][col - 1];
+                            const duration = 1000 + wave * 200 + Math.random() * 500;
+                            
+                            wavePromises.push(new Promise(resolve => {
+                                reel.classList.add('spinning');
+                                let elapsed = 0;
+                                const interval = setInterval(() => {
+                                    reel.textContent = getWeightedRandomSymbol();
+                                    elapsed += 100;
+                                    
+                                    if (elapsed >= duration) {
+                                        clearInterval(interval);
+                                        reel.classList.remove('spinning');
+                                        reel.textContent = finalSymbol;
+                                        resolve();
+                                    }
+                                }, 100);
+                            }));
+                        }
+                    }
+                }
+                
+                animationPromises.push(Promise.all(wavePromises));
+                
+                // Small delay between waves
+                if (wave < 3) {
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+            
+            await Promise.all(animationPromises);
+            return results;
+        }
+
         async function spin() {
-            if (isSpinning || credits < 10) return;
+            if (isSpinning || credits < 50) return;
             
             isSpinning = true;
-            credits -= 10;
-            updateCredits();
+            credits -= 50;
+            lastWin = 0;
+            updateStats();
             
             document.getElementById('spinBtn').disabled = true;
             
-            // Generate final result
-            const result = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
+            // Clear previous paylines
+            document.querySelectorAll('.payline').forEach(line => line.classList.remove('active'));
             
-            // Animate reels with staggered timing
-            const reel1 = document.getElementById('reel1');
-            const reel2 = document.getElementById('reel2');
-            const reel3 = document.getElementById('reel3');
+            // Animate reels and get results
+            const results = await animateReels();
             
-            await Promise.all([
-                animateReel(reel1, result[0], 1000),
-                animateReel(reel2, result[1], 1500),
-                animateReel(reel3, result[2], 2000)
-            ]);
+            // Check all three paylines for wins
+            let allMatches = [];
+            let activePaylines = [];
+            let totalPayout = 0;
             
-            // Calculate payout and show reading
-            const payout = calculatePayout(result);
-            const reading = getReading(result);
+            results.forEach((line, rowIndex) => {
+                const matches = findConsecutiveMatches(line);
+                if (matches.length > 0) {
+                    allMatches = allMatches.concat(matches);
+                    activePaylines.push(rowIndex + 1);
+                    highlightWinningReels(matches, rowIndex);
+                    totalPayout += calculatePayout(matches);
+                }
+            });
             
-            if (payout > 0) {
-                credits += payout;
-                updateCredits();
-                
-                // Flash win animation
-                [reel1, reel2, reel3].forEach(reel => {
-                    reel.classList.add('win-flash');
-                    setTimeout(() => reel.classList.remove('win-flash'), 1500);
-                });
+            // Show active paylines
+            activePaylines.forEach(lineNum => {
+                document.getElementById(`payline${lineNum}`).classList.add('active');
+            });
+            
+            if (totalPayout > 0) {
+                credits += totalPayout;
+                lastWin = totalPayout;
+                totalWon += totalPayout;
+                updateStats();
             }
             
-            // Show reading
+            // Show mystical reading
+            const reading = getReading(allMatches, totalPayout);
             const readingDiv = document.getElementById('reading');
+            
+            let matchSummary = '';
+            if (allMatches.length > 0) {
+                const bestMatch = allMatches.reduce((best, match) => 
+                    match.length > best.length ? match : best
+                );
+                matchSummary = `<br><small style="color: #ffed4e;">Best: ${bestMatch.symbol} × ${bestMatch.length}</small>`;
+            }
+            
             readingDiv.innerHTML = `
                 <h3>${reading.title}</h3>
                 <p>${reading.text}</p>
-                ${payout > 0 ? `<p style="color: #ffd700; font-weight: bold; margin-top: 10px;">You won ${payout} credits!</p>` : ''}
+                ${totalPayout > 0 ? `<p style="color: #ffd700; font-weight: bold; margin-top: 10px;">The cosmos rewards you with ${totalPayout} credits!${matchSummary}</p>` : ''}
             `;
             
             isSpinning = false;
-            document.getElementById('spinBtn').disabled = credits < 10;
+            document.getElementById('spinBtn').disabled = credits < 50;
             
             // Check for game over
-            if (credits < 10) {
+            if (credits < 50) {
                 setTimeout(() => {
                     readingDiv.innerHTML = `
-                        <h3>The Reading Ends</h3>
-                        <p>Your mystical journey concludes here. The cards have been read, the palms have spoken.</p>
-                        <button onclick="resetGame()" style="background: #ffd700; color: #000; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 10px; cursor: pointer;">Start New Reading</button>
+                        <h3>The Cosmic Journey Ends</h3>
+                        <p>Your mystical voyage through the 20 columns of fate reaches its conclusion. The universe has spoken through ${Math.floor(totalWon)} credits of divine fortune.</p>
+                        <button onclick="resetGame()" style="background: #ffd700; color: #000; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 10px; cursor: pointer; font-weight: bold;">Begin New Cosmic Quest</button>
                     `;
-                }, 2000);
+                }, 3000);
             }
         }
 
         function resetGame() {
-            credits = 100;
-            updateCredits();
+            credits = 500;
+            totalWon = 0;
+            lastWin = 0;
+            updateStats();
             document.getElementById('spinBtn').disabled = false;
             document.getElementById('reading').innerHTML = `
-                <h3>Your Palm Awaits...</h3>
-                <p>Spin the mystical reels to reveal what the lines of fate have written for you!</p>
+                <h3>The Cosmic Grid Awaits...</h3>
+                <p>Spin the 20 mystical columns to unlock the secrets written across the vast tapestry of fate!</p>
             `;
             
-            // Reset reels
-            document.getElementById('reel1').textContent = '🤚';
-            document.getElementById('reel2').textContent = '🤚';
-            document.getElementById('reel3').textContent = '🤚';
+            // Reset all reels
+            for (let row = 1; row <= 3; row++) {
+                for (let col = 1; col <= 20; col++) {
+                    const reel = document.getElementById(`reel-${row}-${col}`);
+                    if (reel) {
+                        reel.textContent = '🤚';
+                    }
+                }
+            }
+            
+            // Clear paylines
+            document.querySelectorAll('.payline').forEach(line => line.classList.remove('active'));
         }
 
-        // Initialize
+        // Initialize everything
         generateStars();
-        updateCredits();
+        initializeSlots();
+        updateStats();
         document.getElementById('spinBtn').addEventListener('click', spin);
         
-        // Auto-spin on spacebar
+        // Keyboard controls
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
                 spin();
+            } else if (e.code === 'KeyR') {
+                e.preventDefault();
+                resetGame();
             }
         });
+        
+        // Add some initial mystical ambiance
+        setTimeout(() => {
+            const ambientMessages = [
+                "The cosmic energies are strong today...",
+                "20 columns of destiny await your command...", 
+                "Feel the mystical power flowing through the reels...",
+                "The universe holds infinite possibilities..."
+            ];
+            
+            let messageIndex = 0;
+            setInterval(() => {
+                if (!isSpinning && credits >= 50) {
+                    const readingDiv = document.getElementById('reading');
+                    if (readingDiv.innerHTML.includes('The Cosmic Grid Awaits')) {
+                        readingDiv.innerHTML = `
+                            <h3>Mystical Whispers</h3>
+                            <p><em>${ambientMessages[messageIndex]}</em></p>
+                        `;
+                        messageIndex = (messageIndex + 1) % ambientMessages.length;
+                        
+                        setTimeout(() => {
+                            if (!isSpinning && readingDiv.innerHTML.includes('Mystical Whispers')) {
+                                readingDiv.innerHTML = `
+                                    <h3>The Cosmic Grid Awaits...</h3>
+                                    <p>Spin the 20 mystical columns to unlock the secrets written across the vast tapestry of fate!</p>
+                                `;
+                            }
+                        }, 3000);
+                    }
+                }
+            }, 8000);
+        }, 2000);
     </script>
 </body>
 </html>
+                                    
